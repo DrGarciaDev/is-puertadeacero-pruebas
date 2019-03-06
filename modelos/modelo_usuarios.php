@@ -42,9 +42,170 @@
             $this->pass               = $pass;
             $this->telefono1          = $telefono1;
             $this->email              = $email;
-            $this->fechaRegistro      = $fecha_registro;
+            $this->fecha_registro     = $fecha_registro;
             $this->activo             = $activo;
         }
+
+        /**
+         * Gets the value of id
+         */
+        public function get_id()
+        {
+            return $this->id;
+        }
+        
+        /**
+         * Sets the value of id
+         */
+        public function set_id($id)
+        {
+            $this->id = $id;
+        }
+
+        /**
+         * Gets the value of tipo
+         */
+        public function get_tipo()
+        {
+            return $this->tipo;
+        }
+        
+        /**
+         * Sets the value of tipo
+         */
+        public function set_tipo($tipo)
+        {
+            $this->tipo = $tipo;
+        }
+
+        /**
+         * Gets the value of ape_paterno
+         */
+        public function get_ape_paterno()
+        {
+            return $this->ape_paterno;
+        }
+        
+        /**
+         * Sets the value of ape_paterno
+         */
+        public function set_ape_paterno($ape_paterno)
+        {
+            $this->ape_paterno = $ape_paterno;
+        }
+
+        /**
+         * Gets the value of ape_materno
+         */
+        public function get_ape_materno()
+        {
+            return $this->ape_materno;
+        }
+        
+        /**
+         * Sets the value of ape_materno
+         */
+        public function set_ape_materno($ape_materno)
+        {
+            $this->ape_materno = $ape_materno;
+        }
+
+        /**
+         * Gets the value of nombres
+         */
+        public function get_nombres()
+        {
+            return $this->nombres;
+        }
+        
+        /**
+         * Sets the value of nombres
+         */
+        public function set_nombres($nombres)
+        {
+            $this->nombres = $nombres;
+        }
+
+        /**
+         * Gets the value of pass
+         */
+        public function get_pass()
+        {
+            return $this->pass;
+        }
+        
+        /**
+         * Sets the value of pass
+         */
+        public function set_pass($pass)
+        {
+            $this->pass = $pass;
+        }
+
+        /**
+         * Gets the value of telefono1
+         */
+        public function get_telefono1()
+        {
+            return $this->telefono1;
+        }
+        
+        /**
+         * Sets the value of telefono1
+         */
+        public function set_telefono1($telefono1)
+        {
+            $this->telefono1 = $telefono1;
+        }
+
+        /**
+         * Gets the value of email
+         */
+        public function get_email()
+        {
+            return $this->email;
+        }
+        
+        /**
+         * Sets the value of email
+         */
+        public function set_email($email)
+        {
+            $this->email = $email;
+        }
+
+        /**
+         * Gets the value of fecha_registro
+         */
+        public function get_fecha_registro()
+        {
+            return $this->fecha_registro;
+        }
+        
+        /**
+         * Sets the value of fecha_registro
+         */
+        public function set_fecha_registro($fecha_registro)
+        {
+            $this->fecha_registro = $fecha_registro;
+        }
+
+        /**
+         * Gets the value of activo
+         */
+        public function get_activo()
+        {
+            return $this->activo;
+        }
+        
+        /**
+         * Sets the value of activo
+         */
+        public function set_activo($activo)
+        {
+            $this->activo = $activo;
+        }
+
 
         public function Buscar($buscar = '')
         {
@@ -172,29 +333,66 @@
 
 			echo $contenido;
         }
+
+        public function Agregar($value)
+        {
+        	include('../config/conexion.php');
+
+        	//###### FILTRO anti-XSS
+			$nombre = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Nombres']) );
+			$ape_pat = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Ape_pat']) );
+			$ape_mat = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Ape_mat']) );
+			$telefono = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Telefono']) );
+			$correo = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Correo']) );
+			$contrasena = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Contrasena']) );
+			$contrasena2 = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Contrasena2']) );
+	      	$tipo = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Tipo']) );
+	      	//echo "Tipo: $tipo";
+	      //$sql_Check_Mail = "SELECT * FROM usuarios WHERE correo = '$correo' and contrasena = '$contrasena' COLLATE utf8_bin ";
+	      //$sql_Check_Mail = "SELECT * FROM usuarios WHERE correo = '$correo' and contrasena = BINARY '$contrasena' ";
+			$sql_Check_Mail = "SELECT * FROM usuarios WHERE correo = 'htmlentities($correo)'; ";
+			
+			$result = mysqli_query($enlace, $sql_Check_Mail);
+	      //la siguiente linea funciona igual a la que continúa después
+	      //$count = $result->num_rows;
+			$count = mysqli_num_rows($result);
+
+			if($contrasena == $contrasena2){
+				if($count > 0){
+					$_SESSION['flash'] = "Error";
+				}else {
+					if(filter_var($correo, FILTER_VALIDATE_EMAIL)){
+						$passCifrado = password_hash($contrasena, PASSWORD_DEFAULT);
+						/*
+						if ($tipo == "Administrador"){
+							$tip = 1;
+						}elseif($tipo == "Usuario") {
+							$tip = 2;
+						}
+						*/
+						//var_dump($nombre, $ape_pat, $ape_mat, $curp, $correo, $contrasena, $tipo, $passCifrado);
+						$sql_insert = "INSERT INTO usuarios VALUES('','$nombre','$ape_pat','$ape_mat','$telefono','$correo','$passCifrado','$tipo');";
+						mysqli_query($enlace,$sql_insert)
+							or die("ERROORRR");
+						//$sql = "INSERT INTO `usuario` (`id`, `tipo_usuario`, `curp`, `correo`, `contrasena`, `nombres`, `ape_pat`, `ape_mat`) VALUES (NULL, \'admin\', \'hjc\', \'co\', \'lalala\', \'l\', \'l\', \'l\')";
+						//echo 'Se ha registrado con exito';
+						echo ' <script language="javascript">alert("Usuario registrado con éxito");</script> ';
+	/*
+						$_SESSION['flash'] = "UsA";
+						//echo "<script>location.href='usuarios'</script>";
+						header("Location: ver_usuarios");
+						exit();
+	*/
+					}else{
+						echo '<div class="alert alert-danger"><strong>Error!</strong> No es un correo...</div>';
+					}
+					
+				}// fin del if count
+			}else{
+				echo '<div class="alert alert-danger"><strong>Error!</strong> Las contraseñas son distintas</div>';
+			}//fin total del if checa contraseña
+        }
     }
-
-	if($_SERVER["REQUEST_METHOD"] == "POST") {
-		
-		if($_SESSION['tipo'] === "Administrador") {
-
-			$obj_usuarios = new Usuarios();
-		
-			if (isset($_POST['Busqueda']) && $_POST['Busqueda'] != "") {
-				
-				$obj_usuarios->Buscar($_POST['Busqueda']);
-			
-			}
-
-			if (isset($_POST['ID']) && $_POST¨['ID'] != "") {
-				
-				$obj_usuarios->Eliminar($_POST['ID']);
-
-			}
-			
-		}
-		
-	}//Fin del if SERVER
 
 //$query = "SELECT * FROM usuarios;";
 //$resultado = mysqli_query($enlace, $query);

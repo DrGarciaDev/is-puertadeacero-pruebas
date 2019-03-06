@@ -1,3 +1,19 @@
+<?php
+	if(session_id() == '' || !isset($_SESSION)) { 
+        //session_set_cookie_params(constant('timeC'), constant('path'), $domain, true, true);
+        session_start();
+        ob_start();
+    }
+	if( !isset($_SESSION['usuario']) ){
+		header('Location: ../vistas/vista_ingresar');
+		exit();
+	}
+	$titulo = "USUARIOS";
+
+	include ('../modelos/modelo_usuarios.php');
+	include ('../include/header.php');
+?>
+
 <script type="text/javascript">
   
     function limpiar_inputs() {
@@ -17,7 +33,7 @@
         else{
 
             $.ajax({
-                url: '../modelos/modelo_usuarios.php',
+                url: '../controladores/controlador_usuarios.php',
                 type: 'POST',
                 async: true,
                 data: 'Busqueda=' + buscar,
@@ -40,7 +56,7 @@
 		if(confirm("Realmente deseas eliminar al usuario " + nomb + " " + apee + " Con el Id: " + idd + " ?"))
 		{
 			$.ajax({
-                url: '../modelos/modelo_usuarios.php',
+                url: '../controladores/controlador_usuarios.php',
                 type: 'POST',
                 async: true,
                 data: 'ID=' + idd,
@@ -98,7 +114,7 @@
 				<?php if(isset($_SESSION['usuario'])) { 
 					if($_SESSION['tipo'] === "Administrador") { ?>
 				
-					<a href="usuario_agregar" class="waves-effect orange lighten-2 btn"><i class="material-icons left">input</i>Agregar usuario</a>
+					<a href="../vistas/vista_usuarios_agregar" class="waves-effect orange lighten-2 btn"><i class="material-icons left">input</i>Agregar usuario</a>
 
 					<!-- Modal Trigger -->
 					<a class="waves-effect waves-light btn modal-trigger" href="#modal1"><i class="material-icons left">search</i>Todos los usuarios</a>
@@ -168,6 +184,6 @@
 	  	</div>
     </div><!-- CONTAINER -->
 
-    <script>
-		
-    </script>
+<?php
+	include ('../include/footer.php');
+?>
