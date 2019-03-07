@@ -296,20 +296,20 @@
 			echo $contenido;
         }
 
-        public function Agregar($value)
+        public function Agregar()
         {
         	include('../config/conexion.php');
 
         	//###### FILTRO anti-XSS
             //echo "<script>alert('hola mundo');</script>";
-			$nombre = htmlspecialchars(mysqli_real_escape_string($enlace, $value['Nombres'] ) );
-			$ape_pat = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_ape_paterno() ) );
-			$ape_mat = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_ape_materno() ) );
-			$telefono = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_telefono() ) );
-			$correo = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_email() ) );
-			$contrasena = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_pass() ) );
-			$contrasena2 = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_pass2() ) );
-	      	$tipo = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_tipo() ) );
+			$nombre = htmlspecialchars(mysqli_real_escape_string($enlace, $this->nombres ) );
+			$ape_pat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->ape_paterno ) );
+			$ape_mat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->ape_materno ) );
+			$telefono = htmlspecialchars(mysqli_real_escape_string($enlace, $this->telefono ) );
+			$correo = htmlspecialchars(mysqli_real_escape_string($enlace, $this->email ) );
+			$contrasena = htmlspecialchars(mysqli_real_escape_string($enlace, $this->pass ) );
+			$contrasena2 = htmlspecialchars(mysqli_real_escape_string($enlace, $this->pass2 ) );
+	      	$tipo = htmlspecialchars(mysqli_real_escape_string($enlace, $this->tipo ) );
 	      	
 			$sql_Check_Mail = "SELECT * FROM usuarios WHERE correo = 'htmlentities($correo)'; ";
 			
@@ -328,7 +328,7 @@
 						mysqli_query($enlace,$sql_insert)
 							or die("ERROORRR");
 						//echo 'Se ha registrado con exito';
-						$contenido = ' <script language="javascript">alert("Usuario registrado con éxito");</script> ';
+						$contenido = 'Usuario registrado con éxito';
 	/*
 						$_SESSION['flash'] = "UsA";
 						//echo "<script>location.href='usuarios'</script>";
@@ -336,12 +336,12 @@
 						exit();
 	*/
 					}else{
-						$contenido = '<div class="alert alert-danger"><strong>Error!</strong> No es un correo...</div>';
+						$contenido = 'Error! No es un correo...';
 					}
 					
 				}// fin del if count
 			}else{
-				$contenido = '<div class="alert alert-danger"><strong>Error!</strong> Las contraseñas son distintas</div>';
+				$contenido = 'Error! Las contraseñas son distintas';
 			}//fin total del if checa contraseña
 
             echo $contenido;

@@ -28,8 +28,11 @@
 	        var contrasena 		= $("#Contrasena").val().trim();
 	        var contrasena2 	= $("#Contrasena2").val().trim();
 
-	        if (nombres == "") {
-	            alert('Introduce el Nombres...');
+	        if (tipo == "" || nombres == "" || 
+	        	ape_pat == "" || ape_mat == "" || 
+	        	telefono == "" || correo == "" || 
+	        	contrasena == "" || contrasena2 == "") {
+	            alert('Todos los campos son obligatrorios...');
 	        }
 	        else{
 
@@ -47,7 +50,7 @@
 	                		'&Contrasena2='+contrasena2,
 	                success: function(data){           
 	                    alert(data);  
-	                    
+	                    window.location.replace("../vistas/vista_usuarios_ver_todos");
 	                    //$("#contenido_usuarios_encontrados").html(data); 
 	                    //ocultar_loading("#contenido_oficios_encontrados", data);                   
 	                },
@@ -97,7 +100,7 @@
 					<div class="input-field">
 					  <i class="material-icons prefix">perm_identity</i>
 					  <input type="text" name="Ape_pat" id="Ape_pat" class="validate" required>
-					  <label for="Ape_pat" data-error="Error" data-success="Correcto">Apellido Materno</label>
+					  <label for="Ape_pat" data-error="Error" data-success="Correcto">Apellido Paterno</label>
 					</div>
 
 					<div class="input-field">
@@ -109,12 +112,12 @@
 					<div class="input-field">
 					  <i class="material-icons prefix">email</i>
 					  <input type="text" name="Telefono" id="Telefono" class="validate" required>
-					  <label for="Telefono" data-error="Error" data-success="Correcto">Teléfono</label>
+					  <label for="Telefono">Teléfono</label>
 					</div>
 
 					<div class="input-field">
 					  <i class="material-icons prefix">email</i>
-					  <input type="text" name="Correo" id="Correo" class="validate" required>
+					  <input type="email" name="Correo" id="Correo" class="validate" required>
 					  <label for="Correo" data-error="Error" data-success="Correcto">Correo</label>
 					</div>
 
@@ -132,13 +135,9 @@
 
 					<div class="form-group">
                         <input type="button" class="btn  waves-effect green" value="AGREGAR" onclick="agregar_usuarios()"/>
+						&nbsp;
+						<a href="../vistas/vista_usuarios_ver_todos" class="btn waves-effect waves-light red" role="button">Cancelar</a>
                     </div>
-					<br>
-					<br>
-					<button class="btn waves-effect waves-light" type="submit">Agregar
-						<i class="material-icons right">send</i>
-					</button>
-					<a href="ver_usuarios" class="btn waves-effect waves-light red" role="button">Cancelar</a>
 					<br>
 				</form>
 			</div>

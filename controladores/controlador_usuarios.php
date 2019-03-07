@@ -37,7 +37,7 @@
 				$obj_usuarios->set_pass($_POST['Contrasena']);
 				$obj_usuarios->set_pass2($_POST['Contrasena2']);
 
-				Usuarios::Agregar($obj_usuarios);
+				$obj_usuarios->Agregar();
 
 			}
 
