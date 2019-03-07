@@ -19,7 +19,14 @@
 
 		function agregar_usuarios() {
 
-	        var nombres = $("#Nombres").val().trim();
+	        var tipo 			= $("#Tipo").val().trim();
+	        var nombres 		= $("#Nombres").val().trim();
+	        var ape_pat 		= $("#Ape_pat").val().trim();
+	        var ape_mat 		= $("#Ape_mat").val().trim();
+	        var telefono 		= $("#Telefono").val().trim();
+	        var correo 			= $("#Correo").val().trim();
+	        var contrasena 		= $("#Contrasena").val().trim();
+	        var contrasena2 	= $("#Contrasena2").val().trim();
 
 	        if (nombres == "") {
 	            alert('Introduce el Nombres...');
@@ -30,7 +37,14 @@
 	                url: '../controladores/controlador_usuarios.php',
 	                type: 'POST',
 	                async: true,
-	                data: 'Nombres=' + nombres,
+	                data: 	'Tipo='+tipo+
+	                		'&Nombres='+nombres+
+	                		'&Ape_pat='+ape_pat+
+	                		'&Ape_mat='+ape_mat+
+	                		'&Telefono='+telefono+
+	                		'&Correo='+correo+
+	                		'&Contrasena='+contrasena+
+	                		'&Contrasena2='+contrasena2,
 	                success: function(data){           
 	                    alert(data);  
 	                    

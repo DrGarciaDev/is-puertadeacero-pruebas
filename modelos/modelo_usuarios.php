@@ -14,52 +14,31 @@
 	*/
 	Class Usuarios
     {
-        private $id;
-        private $tipo;
+        private $nombres;
         private $ape_paterno;
         private $ape_materno;
-        private $nombres;
         private $pass;
-        private $telefono1;
+        private $pass2;
+        private $telefono;
         private $email;
-        private $fechaRegistro;
-        private $activo;
+        private $tipo;
 
         /**
          * Constructor de la Clase
          */
-        function __construct($id = "", $tipo = "", 
+        function __construct($tipo = "", $pass2 = "",
                             $ap_paterno = "", $ap_materno = "", 
                             $nombres = "", $pass = "", 
-                            $telefono1 = "", $email = "", 
-                            $fecha_registro = "", $activo = "") 
+                            $telefono = "", $email = "" ) 
         {
-            $this->id                 = $id;
-            $this->tipo               = $tipo;
+            $this->nombres            = $nombres;
             $this->ape_paterno        = $ap_paterno;
             $this->ape_materno        = $ap_materno;
-            $this->nombres            = $nombres;
             $this->pass               = $pass;
-            $this->telefono1          = $telefono1;
+            $this->pass2              = $pass2;
+            $this->telefono           = $telefono;
             $this->email              = $email;
-            $this->fecha_registro     = $fecha_registro;
-            $this->activo             = $activo;
-        }
-
-        /**
-         * Gets the value of id
-         */
-        public function get_id()
-        {
-            return $this->id;
-        }
-        
-        /**
-         * Sets the value of id
-         */
-        public function set_id($id)
-        {
-            $this->id = $id;
+            $this->tipo               = $tipo;
         }
 
         /**
@@ -143,19 +122,35 @@
         }
 
         /**
-         * Gets the value of telefono1
+         * Gets the value of pass
          */
-        public function get_telefono1()
+        public function get_pass2()
         {
-            return $this->telefono1;
+            return $this->pass2;
         }
         
         /**
-         * Sets the value of telefono1
+         * Sets the value of pass
          */
-        public function set_telefono1($telefono1)
+        public function set_pass2($pass2)
         {
-            $this->telefono1 = $telefono1;
+            $this->pass2 = $pass2;
+        }
+
+        /**
+         * Gets the value of telefono
+         */
+        public function get_telefono()
+        {
+            return $this->telefono;
+        }
+        
+        /**
+         * Sets the value of telefono
+         */
+        public function set_telefono($telefono)
+        {
+            $this->telefono = $telefono;
         }
 
         /**
@@ -173,39 +168,6 @@
         {
             $this->email = $email;
         }
-
-        /**
-         * Gets the value of fecha_registro
-         */
-        public function get_fecha_registro()
-        {
-            return $this->fecha_registro;
-        }
-        
-        /**
-         * Sets the value of fecha_registro
-         */
-        public function set_fecha_registro($fecha_registro)
-        {
-            $this->fecha_registro = $fecha_registro;
-        }
-
-        /**
-         * Gets the value of activo
-         */
-        public function get_activo()
-        {
-            return $this->activo;
-        }
-        
-        /**
-         * Sets the value of activo
-         */
-        public function set_activo($activo)
-        {
-            $this->activo = $activo;
-        }
-
 
         public function Buscar($buscar = '')
         {
@@ -339,22 +301,20 @@
         	include('../config/conexion.php');
 
         	//###### FILTRO anti-XSS
-			$nombre = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Nombres']) );
-			$ape_pat = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Ape_pat']) );
-			$ape_mat = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Ape_mat']) );
-			$telefono = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Telefono']) );
-			$correo = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Correo']) );
-			$contrasena = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Contrasena']) );
-			$contrasena2 = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Contrasena2']) );
-	      	$tipo = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Tipo']) );
-	      	//echo "Tipo: $tipo";
-	      //$sql_Check_Mail = "SELECT * FROM usuarios WHERE correo = '$correo' and contrasena = '$contrasena' COLLATE utf8_bin ";
-	      //$sql_Check_Mail = "SELECT * FROM usuarios WHERE correo = '$correo' and contrasena = BINARY '$contrasena' ";
+            //echo "<script>alert('hola mundo');</script>";
+			$nombre = htmlspecialchars(mysqli_real_escape_string($enlace, $value['Nombres'] ) );
+			$ape_pat = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_ape_paterno() ) );
+			$ape_mat = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_ape_materno() ) );
+			$telefono = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_telefono() ) );
+			$correo = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_email() ) );
+			$contrasena = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_pass() ) );
+			$contrasena2 = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_pass2() ) );
+	      	$tipo = htmlspecialchars(mysqli_real_escape_string($enlace, $obj_usuarios->get_tipo() ) );
+	      	
 			$sql_Check_Mail = "SELECT * FROM usuarios WHERE correo = 'htmlentities($correo)'; ";
 			
 			$result = mysqli_query($enlace, $sql_Check_Mail);
-	      //la siguiente linea funciona igual a la que continúa después
-	      //$count = $result->num_rows;
+
 			$count = mysqli_num_rows($result);
 
 			if($contrasena == $contrasena2){
@@ -363,20 +323,12 @@
 				}else {
 					if(filter_var($correo, FILTER_VALIDATE_EMAIL)){
 						$passCifrado = password_hash($contrasena, PASSWORD_DEFAULT);
-						/*
-						if ($tipo == "Administrador"){
-							$tip = 1;
-						}elseif($tipo == "Usuario") {
-							$tip = 2;
-						}
-						*/
 						//var_dump($nombre, $ape_pat, $ape_mat, $curp, $correo, $contrasena, $tipo, $passCifrado);
 						$sql_insert = "INSERT INTO usuarios VALUES('','$nombre','$ape_pat','$ape_mat','$telefono','$correo','$passCifrado','$tipo');";
 						mysqli_query($enlace,$sql_insert)
 							or die("ERROORRR");
-						//$sql = "INSERT INTO `usuario` (`id`, `tipo_usuario`, `curp`, `correo`, `contrasena`, `nombres`, `ape_pat`, `ape_mat`) VALUES (NULL, \'admin\', \'hjc\', \'co\', \'lalala\', \'l\', \'l\', \'l\')";
 						//echo 'Se ha registrado con exito';
-						echo ' <script language="javascript">alert("Usuario registrado con éxito");</script> ';
+						$contenido = ' <script language="javascript">alert("Usuario registrado con éxito");</script> ';
 	/*
 						$_SESSION['flash'] = "UsA";
 						//echo "<script>location.href='usuarios'</script>";
@@ -384,13 +336,15 @@
 						exit();
 	*/
 					}else{
-						echo '<div class="alert alert-danger"><strong>Error!</strong> No es un correo...</div>';
+						$contenido = '<div class="alert alert-danger"><strong>Error!</strong> No es un correo...</div>';
 					}
 					
 				}// fin del if count
 			}else{
-				echo '<div class="alert alert-danger"><strong>Error!</strong> Las contraseñas son distintas</div>';
+				$contenido = '<div class="alert alert-danger"><strong>Error!</strong> Las contraseñas son distintas</div>';
 			}//fin total del if checa contraseña
+
+            echo $contenido;
         }
     }
 
