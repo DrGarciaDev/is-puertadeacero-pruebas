@@ -50,13 +50,10 @@
 	                		'&Contrasena2='+contrasena2,
 	                success: function(data){           
 	                    alert(data);  
-	                    window.location.replace("../vistas/vista_usuarios_ver_todos");
-	                    //$("#contenido_usuarios_encontrados").html(data); 
-	                    //ocultar_loading("#contenido_oficios_encontrados", data);                   
+	                    window.location.replace("../vistas/vista_usuarios_ver_todos");             
 	                },
 	                error: function(){              
 	                    alert("Error...");
-	                    //mensaje_error_carga("#contenido_oficios_encontrados");           
 	                }
 	            });
 	        }

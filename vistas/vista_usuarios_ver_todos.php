@@ -18,9 +18,9 @@
   
     function limpiar_inputs() {
 
-      $("#busqueda_usuarios").val("");     
-      $("#contenido_usuarios_encontrados").html("");       
-      
+		$("#busqueda_usuarios").val("");     
+		$("#contenido_usuarios_encontrados").html("");       
+
     }
 
     function buscar_usuario() {
@@ -37,15 +37,11 @@
                 type: 'POST',
                 async: true,
                 data: 'Busqueda=' + buscar,
-                success: function(data){           
-                    //alert(data);  
-                    
+                success: function(data){
                     $("#contenido_usuarios_encontrados").html(data); 
-                    //ocultar_loading("#contenido_oficios_encontrados", data);                   
                 },
                 error: function(){              
                     alert("Error...");
-                    //mensaje_error_carga("#contenido_oficios_encontrados");           
                 }
             });
         }
@@ -61,7 +57,8 @@
                 async: true,
                 data: 'ID=' + idd,
                 success: function(data){           
-                    alert(data);                   
+                    alert(data);
+                    location.reload()
                 },
                 error: function(){              
                     alert("Error...");
@@ -155,10 +152,7 @@
                         <div class="form-group">
                             <input type="button" class="btn  waves-effect green" value="LIMPIAR FORMULARIO" onclick="limpiar_inputs()"/>
                         </div>
-						<!--<a href="ver_usuarios" class="btn waves-effect waves-light red" role="button">Cancelar</a>-->
 					</form>
-					<!--<button type="button" class="btn btn-primary btn-sm" onclick="location.href='clientes_agregar'">Agregar Nueva</button><br><br>
-					-->
 					<br>
 					<br>
 					

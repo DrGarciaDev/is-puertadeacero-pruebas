@@ -14,6 +14,7 @@
 	*/
 	Class Usuarios
     {
+        private $id;
         private $nombres;
         private $ape_paterno;
         private $ape_materno;
@@ -26,19 +27,36 @@
         /**
          * Constructor de la Clase
          */
-        function __construct($tipo = "", $pass2 = "",
+        function __construct($id = "", $tipo = "", $pass2 = "",
                             $ap_paterno = "", $ap_materno = "", 
                             $nombres = "", $pass = "", 
                             $telefono = "", $email = "" ) 
         {
-            $this->nombres            = $nombres;
-            $this->ape_paterno        = $ap_paterno;
-            $this->ape_materno        = $ap_materno;
-            $this->pass               = $pass;
-            $this->pass2              = $pass2;
-            $this->telefono           = $telefono;
-            $this->email              = $email;
-            $this->tipo               = $tipo;
+            $this->id               = $id;
+            $this->nombres          = $nombres;
+            $this->ape_paterno      = $ap_paterno;
+            $this->ape_materno      = $ap_materno;
+            $this->pass             = $pass;
+            $this->pass2            = $pass2;
+            $this->telefono         = $telefono;
+            $this->email            = $email;
+            $this->tipo             = $tipo;
+        }
+
+        /**
+         * Gets the value of id
+         */
+        public function get_id()
+        {
+            return $this->id;
+        }
+        
+        /**
+         * Sets the value of id
+         */
+        public function set_id($id)
+        {
+            $this->id = $id;
         }
 
         /**
@@ -214,7 +232,7 @@
 										<td>'.$row->ape_paterno.'</td>
 										<td>'.$row->ape_materno.'</td>
 										<td>
-											<a href="../modelos/modelo_usuarios?id=<?= $row->id ?>&editar=2" class="btn yellow darken-1" title="Editar usuario">Editar</a>
+											<a href="../vistas/vista_usuarios_editar?id='.$row->id.'" class="btn yellow darken-1" title="Editar usuario">Editar</a>
 											<button type="button" class="btn red" onclick="eliminar_usuario(\''.$row->nombres.'\', \''.$row->ape_paterno.'\', '.$row->id.')" title="Eliminar usuario">Borrar</button>
 										</td>
 									</tr>';
@@ -266,7 +284,7 @@
 							<td>'.$row->ape_paterno.'</td>
 							<td>'.$row->ape_materno.'</td>
 							<td>
-								<a href="../controladores/controlador_usuarios?id=<?= $row->id ?>&opc=2" class="btn yellow darken-1" title="Editar usuario">Editar</a>
+								<a href="../vistas/vista_usuarios_editar?id='.$row->id.'" class="btn yellow darken-1" title="Editar usuario">Editar</a>
 								<button type="button" class="btn red" onclick="eliminar_usuario(\''.$row->nombres.'\', \''.$row->ape_paterno.'\', '.$row->id.');" title="Eliminar usuario">Borrar</button>
 							</td>
 						</tr>';
@@ -282,7 +300,7 @@
         {
         	include('../config/conexion.php');
 
-        	$query = "DELETE FROM `usuarios` WHERE `id_usuario` = ".$value;
+        	$query = "DELETE FROM usuarios WHERE id = ".$value;
 			$resultado = mysqli_query($enlace,$query);
 
 			if($resultado){
@@ -301,7 +319,6 @@
         	include('../config/conexion.php');
 
         	//###### FILTRO anti-XSS
-            //echo "<script>alert('hola mundo');</script>";
 			$nombre = htmlspecialchars(mysqli_real_escape_string($enlace, $this->nombres ) );
 			$ape_pat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->ape_paterno ) );
 			$ape_mat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->ape_materno ) );
@@ -329,12 +346,7 @@
 							or die("ERROORRR");
 						//echo 'Se ha registrado con exito';
 						$contenido = 'Usuario registrado con éxito';
-	/*
 						$_SESSION['flash'] = "UsA";
-						//echo "<script>location.href='usuarios'</script>";
-						header("Location: ver_usuarios");
-						exit();
-	*/
 					}else{
 						$contenido = 'Error! No es un correo...';
 					}
@@ -346,8 +358,44 @@
 
             echo $contenido;
         }
-    }
 
-//$query = "SELECT * FROM usuarios;";
-//$resultado = mysqli_query($enlace, $query);
+        public function Editar()
+        {
+            include('../config/conexion.php');
+
+            $id = htmlspecialchars( mysqli_real_escape_string($enlace, $this->id) );
+            $nombres = htmlspecialchars(mysqli_real_escape_string($enlace, $this->nombres ) );
+            $ape_pat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->ape_paterno ) );
+            $ape_mat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->ape_materno ) );
+            $telefono = htmlspecialchars(mysqli_real_escape_string($enlace, $this->telefono ) );
+            $correo = htmlspecialchars(mysqli_real_escape_string($enlace, $this->email ) );
+            $contrasena = htmlspecialchars(mysqli_real_escape_string($enlace, $this->pass ) );
+            $contrasena2 = htmlspecialchars(mysqli_real_escape_string($enlace, $this->pass2 ) );
+            $tipo = htmlspecialchars(mysqli_real_escape_string($enlace, $this->tipo ) );
+            
+            $contenido = "Sin movimientos";
+
+            if($contrasena === $contrasena2){
+                if(filter_var($correo, FILTER_VALIDATE_EMAIL)){
+                    $passCifrado = password_hash($contrasena, PASSWORD_DEFAULT);
+                    $query = "UPDATE usuarios SET tipo = '" . $tipo . "', telefono = '" . $telefono . "', 
+                        correo = '" . $correo . "', contrasena = '" . $contrasena . "', nombres = '" . $nombres . "', 
+                        ape_paterno = '" . $ape_pat . "', ape_materno = '" . $ape_mat . "' WHERE id =".$id;
+                    $resultado = mysqli_query($enlace, $query);
+                    if ($resultado) {
+                        $_SESSION['flash'] = "UsEd";
+                        $contenido = 'Usuario Actualizado con éxito';
+                    }
+                }else{
+                    $contenido = 'Ingrese correo valido, vuelve a intentarlo';
+                }
+            }else{
+                $contenido = 'Las contraseñas no coinciden, vuelve a intentarlo';
+            }
+
+            echo $contenido;
+        }
+
+    }//FIN DE LA CLASE USUARIOS
+
 ?>

@@ -27,7 +27,7 @@
 				array_key_exists('Correo', $_POST) &&
 				array_key_exists('Contrasena', $_POST) &&
 				array_key_exists('Contrasena2', $_POST) ) {
-				
+
 				$obj_usuarios->set_tipo($_POST['Tipo']);
 				$obj_usuarios->set_nombres($_POST['Nombres']);
 				$obj_usuarios->set_ape_paterno($_POST['Ape_pat']);
@@ -41,12 +41,32 @@
 
 			}
 
+			if (array_key_exists('Id_editar', $_POST) &&
+				array_key_exists('Tipo_editar', $_POST) &&
+				array_key_exists('Nombres_editar', $_POST) &&
+				array_key_exists('Ape_pat_editar', $_POST) &&
+				array_key_exists('Ape_mat_editar', $_POST) &&
+				array_key_exists('Telefono_editar', $_POST) &&
+				array_key_exists('Correo_editar', $_POST) &&
+				array_key_exists('Contrasena_editar', $_POST) &&
+				array_key_exists('Contrasena2_editar', $_POST) ) {
+				
+				$obj_usuarios->set_id($_POST['Id_editar']);
+				$obj_usuarios->set_tipo($_POST['Tipo_editar']);
+				$obj_usuarios->set_nombres($_POST['Nombres_editar']);
+				$obj_usuarios->set_ape_paterno($_POST['Ape_pat_editar']);
+				$obj_usuarios->set_ape_materno($_POST['Ape_mat_editar']);
+				$obj_usuarios->set_telefono($_POST['Telefono_editar']);
+				$obj_usuarios->set_email($_POST['Correo_editar']);
+				$obj_usuarios->set_pass($_POST['Contrasena_editar']);
+				$obj_usuarios->set_pass2($_POST['Contrasena2_editar']);
+
+				$obj_usuarios->Editar();
+
+			}
+
 		}
 
 	}//Fin del if SERVER
-/*
-	$obj_usuarios->set_tipo("ADMIN");
 
-	echo $obj_usuarios->get_tipo();
-*/
 ?>
