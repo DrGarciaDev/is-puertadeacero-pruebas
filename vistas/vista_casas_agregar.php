@@ -1,52 +1,55 @@
 <?php
-	session_start();
-	ob_start();
+
+	if(session_id() == '' || !isset($_SESSION)) { 
+        //session_set_cookie_params(constant('timeC'), constant('path'), $domain, true, true);
+        session_start();
+        ob_start();
+    }
 	if( !isset($_SESSION['usuario']) ){
-	header('Location: ingresar');
-	exit();
+		header('Location: ../vistas/vista_ingresar');
+		exit();
 	}
-	$titulo = "REGISTRAR CASA";
+	$titulo = "CASAS - AGREGAR";
+
+	include ('../modelos/modelo_casas.php');
+	include ('../include/header.php');
 	include('../config/conexion.php');
-	include('../include/header.php');
-	
-	if($_SERVER["REQUEST_METHOD"] == "POST") {
-		/*
-		Filtro anti-XSS
-		$usuario = htmlspecialchars(mysqli_real_escape_string($enlace, $usuario));
-		$contrasena = htmlspecialchars(mysqli_real_escape_string($enlace, $contrasena));
-		*/
 
-		//###### FILTRO anti-XSS
-		$dueno = trim(strtoupper(htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Dueno']) ) ) );
-		$adeudo = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Adeudo']) );
-		$usuario = htmlspecialchars( mysqli_real_escape_string($enlace, $_POST['Usuario']) );
-
-		/*
-		if ($tipo == "Administrador"){
-			$tip = 1;
-		}elseif($tipo == "Usuario") {
-			$tip = 2;
-		}
-		*/
-		$sql_insert = "INSERT INTO casas(dueno,adeudo,usuario_id) VALUES('$dueno', $adeudo, $usuario);";
-
-		//DEVUELVE TRUE SI LA CONSULTA CON INSERT SE REALIZA CON EXITO
-		if (mysqli_query($enlace, $sql_insert) === TRUE) {
-			echo ' 	<script>
-						alert("Casa registrada con éxito");
-						location.href="ver_casas";
-					</script>';
-		}
-		else {
-			echo ' 	<script>
-						alert("Casa No registrada, intentalo nuevamente");
-					</script>';
-		}
-
-   }//Fin del if SERVER
 ?>
+	<script type="text/javascript">
 
-    <div class="container">
+		function agregar_casas() {
+
+	        var dueno 		= $("#Dueno").val().trim();
+	        var adeudo 		= $("#Adeudo").val().trim();
+	        var usuario 	= $("#Usuario").val().trim();
+
+	        if (dueno == "" || adeudo == "" || 
+	        	usuario == "" ) {
+	            alert('Todos los campos son obligatrorios...');
+	        }
+	        else{
+
+	            $.ajax({
+	                url: '../controladores/controlador_casas.php',
+	                type: 'POST',
+	                async: true,
+	                data: 	'Dueno_agregar='+dueno+
+	                		'&Adeudo_agregar='+adeudo+
+	                		'&Usuario_agregar='+usuario,
+	                success: function(data){           
+	                    alert(data);  
+	                    window.location.replace("../vistas/vista_casas_ver_todas");             
+	                },
+	                error: function(){              
+	                    alert("Error...");
+	                }
+	            });
+	        }
+	    }
+	</script>
+
+<div class="container">
 	    <?php
 	    	if(isset($_SESSION['flash'])){
 	    	if($_SESSION['flash']=='Error'){
@@ -106,10 +109,11 @@
 
 					<br>
 					<br>
-					<button class="btn waves-effect waves-light" type="submit">Agregar
-						<i class="material-icons right">send</i>
-					</button>
-					<a href="ver_proveedores" class="btn waves-effect waves-light red" role="button">Cancelar</a>
+					<div class="form-group">
+                        <input type="button" class="btn  waves-effect green" value="AGREGAR" onclick="agregar_casas()"/>
+						&nbsp;
+						<a href="../vistas/vista_casas_ver_todas" class="btn waves-effect waves-light red" role="button">Cancelar</a>
+                    </div>
 					<br>
 				</form>
 			</div>

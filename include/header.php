@@ -25,7 +25,7 @@
   <?php if($_SESSION['tipo'] === "Administrador") { ?>
     <!-- AQUI SE PUEDEN INSERTAR FILAS DE LISTAS PARA AGREGAR MENÚS DEL TIPO ADMINISTRADOR-->
     <li><a href="../vistas/vista_usuarios_ver_todos">Usuarios</a></li>
-    <li><a href="../ver_casas">Casas</a></li>
+    <li><a href="../vistas/vista_casas_ver_todas">Casas</a></li>
   <?php } ?>
     <li><a href="../ver_pagos">Pagos</a></li>
 </ul>
@@ -46,8 +46,8 @@
           <!--VERIFICA SI TIENE PERMISOS DE ADMINISTRADOR PARA MOSTRAR OPCION DE REGISTRAR, EDITAR
               O ELIMINAR USUARIOS Y PEDIDOS-->
           <?php if($_SESSION['tipo'] === "Administrador") { ?>
-            <li><a href="..../vistas/vista_usuarios_ver_todos"><i class="material-icons left">search</i>Usuarios</a></li>
-            <li><a href="../ver_casas"><i class="material-icons left">search</i>Casas</a></li>
+            <li><a href="../vistas/vista_usuarios_ver_todos"><i class="material-icons left">search</i>Usuarios</a></li>
+            <li><a href="../vistas/vista_casas_ver_todas"><i class="material-icons left">search</i>Casas</a></li>
           <?php } ?>
             <li><a href="../ver_pagos"><i class="material-icons left">search</i>Pagos</a></li>
             <li><a href="../salir"><i class="material-icons left">stop</i>Salir</a></li>
