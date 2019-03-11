@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-10-2018 a las 18:35:14
+-- Tiempo de generación: 11-03-2019 a las 05:04:45
 -- Versión del servidor: 10.1.19-MariaDB
 -- Versión de PHP: 7.0.13
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `puertadeacero_is`
+-- Base de datos: `is_puertadeacero`
 --
 
 -- --------------------------------------------------------
@@ -33,6 +33,15 @@ CREATE TABLE `casas` (
   `usuario_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Volcado de datos para la tabla `casas`
+--
+
+INSERT INTO `casas` (`id`, `dueno`, `adeudo`, `usuario_id`) VALUES
+(3, 'PEPE CHUGA', '200.00', 1),
+(4, 'CROSTY', '500.00', 2),
+(5, 'JOSE ANTONIO', '900.00', 3);
+
 -- --------------------------------------------------------
 
 --
@@ -47,36 +56,18 @@ CREATE TABLE `pagos` (
   `casa_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- --------------------------------------------------------
-
 --
--- Estructura de tabla para la tabla `productos`
+-- Volcado de datos para la tabla `pagos`
 --
 
-CREATE TABLE `productos` (
-  `codigo` varchar(45) NOT NULL,
-  `descripcion` varchar(45) NOT NULL,
-  `costo` decimal(10,2) NOT NULL,
-  `existencia` int(11) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `proveedor_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `proveedores`
---
-
-CREATE TABLE `proveedores` (
-  `id` int(11) NOT NULL,
-  `nombres` varchar(45) NOT NULL,
-  `ape_paterno` varchar(45) NOT NULL,
-  `ape_materno` varchar(45) NOT NULL,
-  `empresa` varchar(45) NOT NULL,
-  `correo` varchar(45) NOT NULL,
-  `telefono` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO `pagos` (`folio`, `fecha`, `monto`, `usuario_id`, `casa_id`) VALUES
+(1, '2018-10-31 17:38:20', '200.00', 1, 3),
+(2, '2018-10-31 09:18:16', '100.00', 1, 3),
+(3, '2018-10-31 17:52:32', '100.00', 1, 4),
+(4, '2018-10-31 18:01:48', '50.00', 1, 4),
+(5, '2018-10-31 18:05:45', '50.00', 1, 4),
+(6, '2018-10-31 18:09:39', '300.00', 1, 4),
+(7, '2019-02-22 06:36:10', '123.00', 1, 3);
 
 -- --------------------------------------------------------
 
@@ -100,9 +91,9 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombres`, `ape_paterno`, `ape_materno`, `telefono`, `correo`, `contrasena`, `tipo`) VALUES
-(1, 'Luis Alberto', 'Garcia', 'Rodriguez', '2233112233', 'luis@gmail.com', '$2y$10$ssbueLLkyrZgzBXnFSSTjuKtTQSR/PB6xCvfUcpAr7lKCdo7qr7ni', 'Administrador'),
-(2, 'Pepe', 'nares', 'nares', '333222', 'correo@correo.com', '$2y$10$eCoeO/ym05GZEPA1cDmsS.wKXrmyX5V2JnCshb5QPNy1fcVFWszyu', 'Administrador'),
-(3, 'Carlos', 'Lopez', 'Obrador', '33789456', 'carlos@gmail.com', '$2y$10$zHoKAKOBe7Zk4DHgnXJp.OkGtwXwY8Av8bx0DziWMhx6jmqIPNasu', 'Administrador');
+(1, 'Luis Alberto', 'García', 'Rodríguez', '333222111', 'luis@gmail.com', '$2y$10$/6h8MyfzKmah8/sAncWe3.xU.5r9DXCjK9qLG4XQ8fzpO3kzFvZCu', 'Administrador'),
+(2, 'Carlos Ernestos', 'Ávila', 'Gómez', '222333555', 'carlos@correo.com', '$2y$10$V6KfQipzRw80ojYfgQKjz.nw1/wz31.gAXgdVQ8djzzUK/L/O1jYK', 'Empleado'),
+(3, 'Saul', 'Uni', 'Uni', '555555', 'saul@correo.com', '$2y$10$pK9RIs7kjt65Sb0YtVJK.eCfy9bLTewdzJCris6aQDcvxV3DM7KqS', 'Administrador');
 
 --
 -- Índices para tablas volcadas
@@ -124,20 +115,6 @@ ALTER TABLE `pagos`
   ADD KEY `casa_id` (`casa_id`);
 
 --
--- Indices de la tabla `productos`
---
-ALTER TABLE `productos`
-  ADD PRIMARY KEY (`codigo`),
-  ADD KEY `usuario_id` (`usuario_id`),
-  ADD KEY `proveedor_id` (`proveedor_id`);
-
---
--- Indices de la tabla `proveedores`
---
-ALTER TABLE `proveedores`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -151,17 +128,12 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `casas`
 --
 ALTER TABLE `casas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `pagos`
 --
 ALTER TABLE `pagos`
-  MODIFY `folio` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT de la tabla `proveedores`
---
-ALTER TABLE `proveedores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `folio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
@@ -172,18 +144,17 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- Filtros para la tabla `casas`
+--
+ALTER TABLE `casas`
+  ADD CONSTRAINT `casas_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `pagos`
 --
 ALTER TABLE `pagos`
   ADD CONSTRAINT `pagos_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `pagos_ibfk_2` FOREIGN KEY (`casa_id`) REFERENCES `casas` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Filtros para la tabla `productos`
---
-ALTER TABLE `productos`
-  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `productos_ibfk_2` FOREIGN KEY (`proveedor_id`) REFERENCES `proveedores` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

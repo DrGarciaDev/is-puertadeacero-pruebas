@@ -32,26 +32,16 @@
 			}
 
 			if (array_key_exists('Id_editar', $_POST) &&
-				array_key_exists('Tipo_editar', $_POST) &&
-				array_key_exists('Nombres_editar', $_POST) &&
-				array_key_exists('Ape_pat_editar', $_POST) &&
-				array_key_exists('Ape_mat_editar', $_POST) &&
-				array_key_exists('Telefono_editar', $_POST) &&
-				array_key_exists('Correo_editar', $_POST) &&
-				array_key_exists('Contrasena_editar', $_POST) &&
-				array_key_exists('Contrasena2_editar', $_POST) ) {
-				
-				$obj_casas->set_id($_POST['Id_editar']);
-				$obj_casas->set_tipo($_POST['Tipo_editar']);
-				$obj_casas->set_nombres($_POST['Nombres_editar']);
-				$obj_casas->set_ape_paterno($_POST['Ape_pat_editar']);
-				$obj_casas->set_ape_materno($_POST['Ape_mat_editar']);
-				$obj_casas->set_telefono($_POST['Telefono_editar']);
-				$obj_casas->set_email($_POST['Correo_editar']);
-				$obj_casas->set_pass($_POST['Contrasena_editar']);
-				$obj_casas->set_pass2($_POST['Contrasena2_editar']);
+				array_key_exists('Dueno_editar', $_POST) &&
+				array_key_exists('Adeudo_editar', $_POST) &&
+				array_key_exists('Usuario_editar', $_POST) ) {
 
-				$obj_casas->Editar();
+				$obj_casas->set_id($_POST['Id_editar']);
+				$obj_casas->set_dueno($_POST['Dueno_editar']);
+				$obj_casas->set_adeudo($_POST['Adeudo_editar']);
+				$obj_casas->set_usuario_id($_POST['Usuario_editar']);
+
+				$obj_casas->Editar_casa();
 
 			}
 

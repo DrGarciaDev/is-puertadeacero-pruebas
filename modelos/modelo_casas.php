@@ -104,11 +104,20 @@
 
 	        	$busqueda = htmlspecialchars( mysqli_real_escape_string($enlace, $buscar) );
 
-                $sql = "SELECT * FROM casas WHERE 
-                id LIKE '%".$busqueda."%' OR 
-                dueno LIKE '%".$busqueda."%' OR  
-                adeudo LIKE '%".$busqueda."%' ";      
-                
+                $sql = "SELECT 
+                            casas.id,
+                            casas.dueno,
+                            casas.adeudo,
+                            CONCAT(usuarios.nombres,' ',usuarios.ape_paterno,' ',usuarios.ape_materno) AS nom_usr 
+                        
+                        FROM casas
+                        INNER JOIN usuarios
+                        ON casas.usuario_id = usuarios.id
+                        WHERE 
+                        casas.id LIKE '%".$busqueda."%' OR 
+                        casas.dueno LIKE '%".$busqueda."%' OR  
+                        casas.adeudo LIKE '%".$busqueda."%' ";      
+                        
                 $resultadoEsp = mysqli_query($enlace, $sql);
                 $count = mysqli_num_rows($resultadoEsp);
 				
@@ -121,6 +130,7 @@
                                         <th>Id Casa</th>
                                         <th>Dueño(s)</th>
                                         <th>Adeudo</th>
+                                        <th>Usuario asignado</th>                                        
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
@@ -131,8 +141,9 @@
                                         <td>'.$row->id.'</td>
                                         <td>'.$row->dueno.'</td>
                                         <td>'.$row->adeudo.'</td>
+                                        <td>'.$row->nom_usr.'</td>
                                         <td>
-                                            <a href="casa_editar?id='.$row->id.'" class="btn orange darken-1" title="Editar casa">Editar</a>
+                                            <a href="../vistas/vista_casas_editar?Id_casa='.$row->id.'" class="btn orange darken-1" title="Editar casa">Editar</a>
                                             <button type="button" class="btn red" onclick="eliminar_casa(\''.$row->dueno.'\', \''.$row->adeudo.'\', '.$row->id.')" title="Eliminar casa">Borrar</button>
                                         </td>
                                     </tr>';
@@ -159,7 +170,14 @@
 			
 			$contenido = '<h4>Todas las casas</h4>';
             
-            $query = "SELECT * FROM casas;";
+            $query="SELECT casas.id,
+                            casas.dueno,
+                            casas.adeudo,
+                            CONCAT(usuarios.nombres,' ',usuarios.ape_paterno,' ',usuarios.ape_materno) AS nom_usr 
+                        
+                    FROM casas
+                    INNER JOIN usuarios
+                    ON casas.usuario_id = usuarios.id";
             $resultado = mysqli_query($enlace, $query);
         
             $contenido .= '
@@ -169,6 +187,7 @@
                             <th>Id Casa</th>
                             <th>Dueño(s)</th>
                             <th>Adeudo</th>
+                            <th>Usuario asignado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -179,8 +198,9 @@
                             <td>'.$row->id.'</td>
                             <td>'.$row->dueno.'</td>
                             <td>'.$row->adeudo.'</td>
+                            <td>'.$row->nom_usr.'</td>
                             <td>
-                                <a href="casa_editar?id=<?= $row->id ?>" class="btn orange darken-1" title="Editar casa">editar</a>
+                                <a href="../vistas/vista_casas_editar?Id_casa='.$row->id.'" class="btn orange darken-1" title="Editar casa">editar</a>
                                 <button type="button" class="btn red" onclick="eliminar_casa(\''.$row->dueno.'\', \''.$row->adeudo.'\', '.$row->id.')" title="Eliminar casa">Borrar</button>
                             </td>
                         </tr>';
@@ -233,38 +253,24 @@
             echo $contenido;
         }
 
-        public function Editar()
+        public function Editar_casa()
         {
             include('../config/conexion.php');
 
-            $id = htmlspecialchars( mysqli_real_escape_string($enlace, $this->id) );
-            $dueno = htmlspecialchars(mysqli_real_escape_string($enlace, $this->dueno ) );
-            $ape_pat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->adeudo ) );
-            $ape_mat = htmlspecialchars(mysqli_real_escape_string($enlace, $this->usuario_id ) );
-            $telefono = htmlspecialchars(mysqli_real_escape_string($enlace, $this->telefono ) );
-            $correo = htmlspecialchars(mysqli_real_escape_string($enlace, $this->email ) );
-            $contrasena = htmlspecialchars(mysqli_real_escape_string($enlace, $this->pass ) );
-            $contrasena2 = htmlspecialchars(mysqli_real_escape_string($enlace, $this->pass2 ) );
-            $tipo = htmlspecialchars(mysqli_real_escape_string($enlace, $this->tipo ) );
-            
-            $contenido = "Sin movimientos";
+            $id         = htmlspecialchars( mysqli_real_escape_string($enlace, $this->id ) );
+            $dueno      = trim(strtoupper(htmlspecialchars( mysqli_real_escape_string($enlace, $this->dueno) ) ) );
+            $adeudo     = htmlspecialchars( mysqli_real_escape_string($enlace, $this->adeudo ) );
+            $usuario    = htmlspecialchars( mysqli_real_escape_string($enlace, $this->usuario_id ) );
 
-            if($contrasena === $contrasena2){
-                if(filter_var($correo, FILTER_VALIDATE_EMAIL)){
-                    $passCifrado = password_hash($contrasena, PASSWORD_DEFAULT);
-                    $query = "UPDATE usuarios SET tipo = '" . $tipo . "', telefono = '" . $telefono . "', 
-                        correo = '" . $correo . "', contrasena = '" . $contrasena . "', dueno = '" . $dueno . "', 
-                        adeudo = '" . $ape_pat . "', usuario_id = '" . $ape_mat . "' WHERE id =".$id;
-                    $resultado = mysqli_query($enlace, $query);
-                    if ($resultado) {
-                        $_SESSION['flash'] = "UsEd";
-                        $contenido = 'Usuario Actualizado con éxito';
-                    }
-                }else{
-                    $contenido = 'Ingrese correo valido, vuelve a intentarlo';
-                }
-            }else{
-                $contenido = 'Las contraseñas no coinciden, vuelve a intentarlo';
+            $query = "UPDATE casas SET dueno = '".$dueno."', adeudo = ".$adeudo.", usuario_id = ".$usuario." WHERE id = ".$id ;
+            
+            $resultado = mysqli_query($enlace, $query);
+            
+            if ($resultado) {
+                $contenido = 'Casa editada con éxito';
+            }
+            else {
+                $contenido = 'Casa No editada, intentalo nuevamente';
             }
 
             echo $contenido;
