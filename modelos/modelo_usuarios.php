@@ -379,15 +379,18 @@
                 if(filter_var($correo, FILTER_VALIDATE_EMAIL)){
                     $passCifrado = password_hash($contrasena, PASSWORD_DEFAULT);
                     $query = "UPDATE usuarios SET tipo = '" . $tipo . "', telefono = '" . $telefono . "', 
-                        correo = '" . $correo . "', contrasena = '" . $contrasena . "', nombres = '" . $nombres . "', 
+                        correo = '" . $correo . "', contrasena = '" . $passCifrado . "', nombres = '" . $nombres . "', 
                         ape_paterno = '" . $ape_pat . "', ape_materno = '" . $ape_mat . "' WHERE id =".$id;
                     $resultado = mysqli_query($enlace, $query);
                     if ($resultado) {
                         $_SESSION['flash'] = "UsEd";
                         $contenido = 'Usuario Actualizado con éxito';
                     }
+                    else {
+                        $contenido = 'Usuario No editado, intentalo nuevamente';
+                    }
                 }else{
-                    $contenido = 'Ingrese correo valido, vuelve a intentarlo';
+                    $contenido = 'Ingrese correo valido y vuelve a intentarlo';
                 }
             }else{
                 $contenido = 'Las contraseñas no coinciden, vuelve a intentarlo';

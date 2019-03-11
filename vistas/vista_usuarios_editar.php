@@ -34,7 +34,7 @@
 		function editar_usuarios(id) {
 
 			var id = id;
-			alert(id);
+			//alert(id);
 			//return
 	        var tipo 			= $("#Tipo").val().trim();
 	        var nombres 		= $("#Nombres").val().trim();
